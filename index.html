@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PAGARNUSA UNUSIA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ========== (Semua style asli dipertahankan) ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Poppins', sans-serif; background: linear-gradient(180deg,#f0fdfa,#f6f9f8); color:#333; overflow-x:hidden; }
+    header { background:linear-gradient(90deg,#009688,#00796b); color:white; display:flex; align-items:center; justify-content:center; gap:12px; text-align:center; padding:18px 20px; flex-wrap:wrap; position:sticky; top:0; z-index:1000; box-shadow:0 4px 15px rgba(0,0,0,0.15); animation:slideDown 1s ease; backdrop-filter: blur(8px); }
+    header img { width:65px; height:auto; border-radius:50%; padding:5px; background:rgba(255,255,255,0.15); box-shadow:0 2px 6px rgba(0,0,0,0.25); transition: transform 0.4s ease, box-shadow 0.3s ease; }
+    header img:hover{ transform:rotate(10deg) scale(1.1); box-shadow:0 4px 10px rgba(255,255,255,0.4); }
+    header h1{ font-size:1.8em; font-weight:600; letter-spacing:0.5px; margin:0; line-height:1.3em; animation:fadeIn 1.2s ease; }
+
+    main { max-width:960px; background:#ffffff; margin:25px auto; padding:30px; border-radius:18px; box-shadow:0 8px 25px rgba(0,0,0,0.08); animation:fadeUp 1s ease; }
+    article h2{ color:#00796b; margin-top:28px; border-left:5px solid #009688; padding-left:12px; font-size:1.35em; font-weight:600; transition: color .3s ease, transform .3s ease; animation:fadeUp 1s ease; }
+    article h2:hover{ color:#004d40; transform:translateX(5px); }
+    article p, article li{ margin-bottom:10px; text-align:justify; color:#333; font-size:.97em; animation:fadeUp .8s ease; }
+    ul,ol{ margin-left:22px; margin-top:10px; }
+    img.center{ display:block; margin:15px auto; border-radius:10px; max-width:100%; height:auto; box-shadow:0 5px 15px rgba(0,0,0,0.15); transition:transform .5s ease, box-shadow .3s ease; animation:zoomIn 1s ease; }
+    img.center:hover{ transform:scale(1.05); box-shadow:0 8px 18px rgba(0,0,0,0.25); }
+    table{ width:100%; border-collapse:collapse; margin:20px 0; text-align:center; font-size:.95em; border-radius:10px; overflow:hidden; box-shadow:0 3px 10px rgba(0,0,0,0.05); animation:fadeIn 1s ease; }
+    th,td{ border:1px solid #ddd; padding:10px; }
+    thead{ background:linear-gradient(90deg,#e0f2f1,#b2dfdb); color:#004d40; font-weight:600; }
+    tbody tr{ transition:background-color .3s ease, transform .2s ease; }
+    tbody tr:hover{ background-color:#f1fdfb; transform:scale(1.01); }
+    td img{ width:80px; border-radius:8px; transition:transform .3s ease; }
+    td img:hover{ transform:scale(1.1); }
+    .feedback-section{ background:#ffffff; border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,0.08); padding:35px 20px; margin:40px auto; max-width:850px; text-align:center; animation:fadeUp 1.2s ease; }
+    .feedback-section h2{ color:#00796b; margin-bottom:10px; font-size:1.45em; }
+    .feedback-section p{ color:#555; margin-bottom:20px; }
+    .feedback-form{ display:flex; flex-direction:column; gap:12px; align-items:center; animation:fadeUp 1.2s ease; }
+    .feedback-form input,.feedback-form textarea{ width:100%; max-width:600px; padding:12px; border:1px solid #ccc; border-radius:10px; font-size:1em; font-family:inherit; outline:none; transition:border-color .3s ease, box-shadow .3s ease; }
+    .feedback-form input:focus, .feedback-form textarea:focus{ border-color:#009688; box-shadow:0 0 8px rgba(0,150,136,0.4); }
+    .feedback-form button{ background:linear-gradient(90deg,#009688,#00796b); color:white; border:none; padding:12px 30px; border-radius:10px; font-size:1em; cursor:pointer; transition: background .3s ease, transform .2s ease; }
+    .feedback-form button:hover{ background:#00695c; transform:translateY(-3px); }
+    footer{ background:linear-gradient(90deg,#00796b,#009688); color:white; text-align:center; padding:18px 10px; margin-top:50px; font-size:.9em; letter-spacing:.5px; box-shadow:0 -2px 10px rgba(0,0,0,0.1); animation:fadeIn 1.5s ease; }
+    #logoutBtn{ position:fixed; right:16px; bottom:90px; z-index:1101; background:linear-gradient(90deg,#ff7043,#f4511e); color:white; border:none; padding:10px 14px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.12); cursor:pointer; display:none; font-weight:600; }
+
+    /* ========== NEW: Face Verification Overlay (menjaga look & feel) ========== */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(7,18,16,0.80);
+      z-index: 1200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    .verify-card {
+      width: 100%;
+      max-width: 420px;
+      background: linear-gradient(180deg,#ffffff,#f7fffd);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+      text-align: center;
+    }
+    .verify-card h3 { color:#004d40; margin-bottom:6px; font-size:1.25rem; }
+    .verify-card p { color:#326a63; font-size:0.95rem; margin-bottom:10px; }
+    .verify-controls { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
+    .btn { padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:600; }
+    .btn-primary { background:linear-gradient(90deg,#009688,#00796b); color:#fff; }
+    .btn-outline { background:#e9f7f4; color:#004d40; }
+    .btn-danger { background:#ffebee; color:#c62828; }
+    #video { width:100%; max-width:360px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.12); display:none; margin:8px auto 0; }
+    .status { margin-top:10px; font-size:0.95rem; color:#2e7d32; min-height:22px; }
+    .locked { filter: blur(3px); pointer-events: none; user-select: none; }
+
+    @keyframes fadeUp { from{ opacity:0; transform:translateY(30px);} to{ opacity:1; transform:translateY(0);} }
+    @keyframes fadeIn { from{ opacity:0 } to{ opacity:1 } }
+    @keyframes zoomIn { from{ opacity:0; transform:scale(.9)} to{ opacity:1; transform:scale(1)} }
+    @keyframes slideDown { from{ transform:translateY(-100%); opacity:0 } to{ transform:translateY(0); opacity:1 } }
+
+    @media (max-width:768px) {
+      header { flex-direction:column; gap:8px; }
+      header img { width:70px; }
+      header h1 { font-size:1.4em; }
+      main { margin:12px; padding:20px; }
+      article h2 { font-size:1.1em; }
+      table,th,td { font-size:.85em; }
+      td img { width:65px; }
+      .feedback-form input, .feedback-form textarea { max-width:100%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========== FACE-ONLY LOGIN OVERLAY (Hanya verifikasi wajah) ========== -->
+  <div id="faceOverlay" class="login-overlay" aria-hidden="false">
+    <div class="verify-card" role="dialog" aria-labelledby="verifyTitle">
+      <h3 id="verifyTitle">Verifikasi Wajah — Akses Terbatas</h3>
+      <p>Untuk mengakses halaman ini, silakan lakukan verifikasi wajah. Hanya wajah yang terdaftar di <code>/daftar wajah/</code> yang dapat masuk.</p>
+
+      <div class="verify-controls">
+        <button id="startBtn" class="btn btn-primary">Mulai Verifikasi</button>
+        <button id="stopBtn" class="btn btn-outline" style="display:none">Hentikan Kamera</button>
+        <button id="refreshDbBtn" class="btn btn-outline" title="Muat ulang daftar wajah dari folder">Muat Ulang Daftar Wajah</button>
+        <button id="clearRefBtn" class="btn btn-danger" title="Kosongkan wajah ter-deteksi (untuk debugging)">Bersihkan Data</button>
+      </div>
+
+      <video id="video" autoplay muted playsinline></video>
+      <div id="status" class="status" aria-live="polite"></div>
+
+      <p style="font-size:0.85rem;color:#5a7d77;margin-top:10px">Catatan: file model harus tersedia di <code>/models/</code> dan gambar wajah di <code>/daftar wajah/</code>. Jalankan lewat server lokal.</p>
+    </div>
+  </div>
+
+  <!-- ====== (Body utama dipertahankan UTUH — tidak dirubah) ====== -->
+  <header id="pageHeader">
+    <img src="logopn.png" alt="Logo PAGARNUSA">
+    <h1>PAGARNUSA UNUSIA</h1>
+  </header>
+
+  <main id="mainContent" class="locked">
+    <article>
+      <h2>Sejarah</h2>
+      <p>Pencak Silat Nahdlatul Ulama Pagar Nusa: Pilar Pencak Silat di Lingkungan NU</p>
+      <p>Pencak Silat Nahdlatul Ulama Pagar Nusa (PSNU PAGARNUSA) adalah organisasi yang menjadi wadah bagi pengembangan pencak silat di bawah naungan Nahdlatul Ulama (NU). Organisasi ini memiliki sejarah yang kaya dan peran penting dalam melestarikan seni bela diri tradisional Indonesia.</p>
+
+      <p><b>Latar Belakang dan Pendirian</b></p>
+      <p>PSNU PAGARNUSA digagas pada tanggal 12 Muharam 1406 H / 27 September 1985 M di Pondok Pesantren Tebuireng, Jombang, Jawa Timur. Pendiriannya dilatarbelakangi oleh kegelisahan para ulama akan kurangnya wadah yang menyatukan perguruan-perguruan pencak silat di lingkungan NU. Gagasan ini diinisiasi oleh Drs. KH. Muhammad Nur Aziz, seorang pendekar dari Ponorogo, Jawa Timur.</p>
+      <p>Organisasi ini kemudian resmi berdiri pada tanggal 22 Rabi’ul Akhir 1406 H / 03 Januari 1986 M di Pondok Pesantren Lirboyo, Kediri, Jawa Timur. KH. Abdulloh Maksum Jauhari menjadi Ketua Umum pertama, dengan tujuan menyatukan dan mewadahi berbagai perguruan silat NU yang sebelumnya berjalan sendiri-sendiri.</p>
+
+      <p><b>Peran dan Fungsi</b></p>
+      <p>PSNU PAGARNUSA berperan sebagai badan otonom di bawah naungan Nahdlatul Ulama. Organisasi ini bergerak dalam melaksanakan kebijakan NU terkait pengembangan seni, budaya, tradisi, olahraga pencak silat, pengobatan alternatif, dan pengabdian masyarakat. Dengan demikian, PSNU PAGARNUSA tidak hanya fokus pada aspek bela diri, tetapi juga memiliki dimensi sosial dan kebudayaan yang luas.</p>
+      <img src="salampn.png" alt="Salam Pagar Nusa" class="center">
+
+      <h2>Sejarah Perkembangan</h2>
+      <ul>
+        <li><b>Pertemuan Pertama (27 September 1985):</b> Pertemuan di Pondok Pesantren Tebuireng yang mengawali gagasan pendirian organisasi pencak silat NU.</li>
+        <li><b>Pendirian Resmi (3 Januari 1986):</b> Pendirian PSNU PAGARNUSA di Pondok Pesantren Lirboyo dan penunjukan KH. Abdulloh Maksum Jauhari sebagai Ketua Umum pertama.</li>
+        <li><b>Perumusan Identitas:</b> Penetapan nama PAGARNUSA dan simbol organisasi.</li>
+        <li><b>Pengesahan dan Pelantikan:</b> Pengesahan nama Ikatan Pencak Silat NU Pagarnusa dan pelantikan pengurus oleh PWNU Jawa Timur pada 26 Maret 1986.</li>
+        <li><b>Peresmian oleh PBNU (16 Juli 1986):</b> Peresmian Lembaga Pencak Silat Nahdhatul Ulama Pagarnusa oleh KH. Ahmad Shidiq dan KH. Abdurrahman Wahid (Gus Dur).</li>
+        <li><b>Munas I di Genggong (1991):</b> Pelaksanaan Munas pertama di Pondok Pesantren Zainul Hasan, Genggong.</li>
+        <li><b>Perubahan Status Organisasi:</b> Perubahan status dari lembaga menjadi badan otonom dan kembali menjadi lembaga dalam Muktamar NU.</li>
+        <li><b>Munas II di Jakarta (2001):</b> Pelaksanaan Munas II di Padepokan IPSI TMII Jakarta.</li>
+        <li><b>Status Badan Otonom (2004):</b> Penetapan PSNU PAGARNUSA sebagai badan otonom di bawah NU hingga saat ini.</li>
+      </ul>
+
+      <h2>Hierarki Organisasi</h2>
+      <ol>
+        <li>Pimpinan Pusat (PP)</li>
+        <li>Pimpinan Wilayah (PW)</li>
+        <li>Pimpinan Cabang Istimewa (PCI)</li>
+        <li>Pimpinan Cabang (PC)</li>
+        <li>Pimpinan Anak Cabang (PAC)</li>
+        <li>Pimpinan Rayon</li>
+        <li>Pimpinan Ranting</li>
+      </ol>
+
+      <h2>Daftar Ketua Umum</h2>
+      <table>
+        <thead>
+          <tr><th>Potret</th><th>Nama</th><th>Mulai</th><th>Selesai</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><img src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Gus_Maksum_Pendiri_Pagar_Nusa.jpg"></td><td><b>KH. Abdullah Maksum Jauhari</b></td><td>1986</td><td>2003</td></tr>
+          <tr><td><img src="https://upload.wikimedia.org/wikipedia/commons/4/40/KH_SUHARBILLAH.jpg"></td><td>Dr. KH. Suharbillah</td><td>2003</td><td>2007</td></tr>
+          <tr><td><img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/KH_FUAD_PN.jpg"></td><td>Drs. KH. Fuad Anwar, M.Si</td><td>2007</td><td>2012</td></tr>
+          <tr><td><img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/GUS_AIZUDIN_PN.jpg"></td><td>KH. Aizzudin Abdurrahman</td><td>2012</td><td>2016</td></tr>
+          <tr><td><img src="https://i0.wp.com/priangan.com/wp-content/uploads/2025/04/images-7.jpeg?fit=600%2C381&ssl=1"></td><td>Ajengan Mimih Haeruman</td><td>2016</td><td>2017</td></tr>
+          <tr><td><img src="https://www.risalahnu.com/wp-content/uploads/2022/12/ketua-umum-pagar-nusa-m-nabil-haroen-_170801170003-485.jpg"></td><td><a href="https://id.wikipedia.org/wiki/Muchamad_Nabil_Haroen" target="_blank">Muchamad Nabil Haroen</a></td><td>2017</td><td><em>sekarang</em></td></tr>
+        </tbody>
+      </table>
+
+      <h2>Tujuan Pagar Nusa</h2>
+      <ol>
+        <li>Pembinaan, pengembangan, pelestarian seni bela diri pencak silat dan ketabiban dalam rangka mewujudkan masyarakat Indonesia yang berbudi luhur dan Pancasilais.</li>
+        <li>Berlakunya ajaran Islam menurut paham Ahlusunnah wal Jamaah di tengah kehidupan masyarakat dalam wadah NKRI.</li>
+      </ol>
+
+      <h2>Prasetya Pagar Nusa</h2>
+      <p>أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُوْلُ اللهِ</p>
+      <ol>
+        <li>Bertaqwa kepada Allah SWT</li>
+        <li>Berbakti kepada Nusa dan Bangsa</li>
+        <li>Menjunjung tinggi persatuan dan kesatuan</li>
+        <li>Mempertahankan kebenaran dan mencegah kemungkaran</li>
+        <li>Mempertahankan faham Ahlusunnah wal Jama'ah An Nahdliyah</li>
+      </ol>
+    </article>
+  </main>
+
+  <section class="feedback-section" id="feedbackSection">
+    <h2>Kirim Masukan</h2>
+    <p>Kami sangat menghargai pertanyaan dan saran Anda.</p>
+    <form class="feedback-form" onsubmit="return sendToWhatsApp()">
+      <input type="text" id="nama" name="nama" placeholder="Nama Anda" required>
+      <textarea id="pesan" name="pesan" rows="4" placeholder="Tulis pertanyaan Anda di sini..." required></textarea>
+      <button type="submit">Kirim ke WhatsApp</button>
+    </form>
+  </section>
+
+  <footer>&copy; 2025 PAGARNUSA UNUSIA. All rights reserved.</footer>
+
+  <button id="logoutBtn" title="Keluar (Logout)">Logout</button>
+
+  <!-- ========== SCRIPTS ========== -->
+  <!-- face-api.js dari CDN (library utama) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+  <script>
+    /*************************************************************************
+     * Face recognition implementation (REAL) using face-api.js
+     *
+     * - Memuat model dari ./models/
+     * - Memuat gambar dari /daftar wajah/ (menebak nama wajah1..wajah20)
+     * - Mencocokkan wajah kamera dengan labeled descriptors
+     *
+     * Important:
+     * - Harus dijalankan lewat HTTP(S) server (localhost atau host).
+     * - Letakkan model face-api di /models/
+     * - Letakkan gambar wajah di /daftar wajah/
+     *************************************************************************/
+
+    const video = document.getElementById('video');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const refreshDbBtn = document.getElementById('refreshDbBtn');
+    const clearRefBtn = document.getElementById('clearRefBtn');
+    const statusEl = document.getElementById('status');
+    const overlay = document.getElementById('faceOverlay');
+    const mainContent = document.getElementById('mainContent');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // session key agar setelah verifikasi tetap dibuka sampai logout
+    const ACCESS_KEY = 'pagar_face_access';
+
+    // Konfigurasi (sesuaikan jika perlu)
+    const MODEL_URL = './models'; // pastikan folder models ada di root /sejarah-pn/models
+    const LABEL_FOLDER = './daftar wajah'; // folder dengan foto wajah
+
+    // daftar nama / file wajah yang akan dicoba - jika nama berbeda, edit array ini.
+    // Script akan mencoba <label> + .jpg/.png; jika tidak ada, lanjut ke label berikutnya.
+    // Ganti atau tambahkan nama sesuai filemu, atau gunakan pola "wajah1","wajah2",...
+    const possibleLabels = [];
+    for (let i = 1; i <= 20; i++) possibleLabels.push('wajah' + i); // coba wajah1..wajah20
+
+    // jika kamu ingin gunakan nama file spesifik, ganti possibleLabels = ['agus','budi','siti']
+    // contohnya: const possibleLabels = ['wajah1','wajah2','nama_satu'];
+
+    let faceMatcher = null;
+    let stream = null;
+    let isModelsLoaded = false;
+
+    // Helpers
+    function logStatus(msg, ok = true) {
+      statusEl.textContent = msg;
+      statusEl.style.color = ok ? '#2e7d32' : '#c62828';
+      console.log(msg);
+    }
+
+    async function loadModels() {
+      logStatus('Memuat model face-api.js dari ' + MODEL_URL + ' ...');
+      try {
+        // models required
+        await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+        await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+        await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+        isModelsLoaded = true;
+        logStatus('Model dimuat. Memuat database wajah (gambar) ...');
+      } catch (e) {
+        console.error(e);
+        logStatus('Gagal memuat model. Pastikan folder /models tersedia dan berisi file model.', false);
+      }
+    }
+
+    // coba memuat gambar dan membuat labeled descriptors
+    async function loadLabeledImages() {
+      if (!isModelsLoaded) {
+        logStatus('Model belum dimuat. Tidak dapat memuat gambar.', false);
+        return [];
+      }
+
+      const labels = []; // akan diisi label yg benar2 ada
+      const labeledDescriptors = [];
+
+      // fungsi bantu: test apakah file ada (fetch HEAD)
+      async function fileExists(url) {
+        try {
+          const resp = await fetch(url, { method: 'HEAD' });
+          return resp.ok;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      for (const label of possibleLabels) {
+        // coba ekstensi .jpg lalu .png
+        let fileUrlJpg = `${LABEL_FOLDER}/${label}.jpg`;
+        let fileUrlPng = `${LABEL_FOLDER}/${label}.png`;
+        let useUrl = null;
+
+        if (await fileExists(fileUrlJpg)) useUrl = fileUrlJpg;
+        else if (await fileExists(fileUrlPng)) useUrl = fileUrlPng;
+        else {
+          // tidak ada file untuk label ini -> lewati
+          continue;
+        }
+
+        try {
+          // Ambil image, deteksi wajah dan buat descriptor
+          const img = await faceapi.fetchImage(useUrl);
+          const detections = await faceapi.detectSingleFace(img, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
+          if (!detections || !detections.descriptor) {
+            console.warn('Tidak menemukan wajah pada file:', useUrl);
+            continue;
+          }
+          labels.push(label);
+          labeledDescriptors.push(new faceapi.LabeledFaceDescriptors(label, [detections.descriptor]));
+          logStatus('Memproses referensi wajah: ' + label);
+        } catch (err) {
+          console.error('Error loading label', label, err);
+        }
+      }
+
+      if (labeledDescriptors.length === 0) {
+        logStatus('Tidak ada gambar wajah yang berhasil diproses di /daftar wajah/. Pastikan foto jelas dan mengandung 1 wajah.', false);
+      } else {
+        logStatus('Database wajah siap. ' + labeledDescriptors.length + ' wajah terdaftar.');
+      }
+
+      return labeledDescriptors;
+    }
+
+    // initialize face matcher
+    async function buildFaceMatcher() {
+      const labeled = await loadLabeledImages();
+      if (labeled.length === 0) {
+        faceMatcher = null;
+        return;
+      }
+      faceMatcher = new faceapi.FaceMatcher(labeled, 0.6); // threshold default 0.6
+    }
+
+    // Start camera & recognition loop
+    async function startVerification() {
+      if (!isModelsLoaded) {
+        await loadModels();
+      }
+      await buildFaceMatcher();
+      if (!faceMatcher) {
+        logStatus('Face matcher belum tersedia. Periksa /daftar wajah/ dan model.', false);
+        return;
+      }
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+        video.srcObject = stream;
+        video.style.display = 'block';
+        startBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+        logStatus('Kamera aktif. Mengidentifikasi ...');
+      } catch (err) {
+        console.error(err);
+        logStatus('Gagal mengakses kamera. Periksa izin perangkat.', false);
+        return;
+      }
+
+      const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 });
+
+      // loop deteksi frame
+      const interval = 300; // ms antara pengecekan frame
+      let running = true;
+
+      stopBtn.onclick = () => { running = false; stopCamera(); logStatus('Kamera dihentikan.'); startBtn.style.display = 'inline-block'; };
+
+      while (running) {
+        if (video.readyState >= 2) {
+          const detections = await faceapi.detectAllFaces(video, options).withFaceLandmarks().withFaceDescriptors();
+          if (detections && detections.length) {
+            // untuk setiap wajah terdeteksi, cari kecocokan
+            for (const d of detections) {
+              const best = faceMatcher.findBestMatch(d.descriptor);
+              console.log('match', best.toString());
+              if (best.label !== 'unknown' && best.distance <= 0.6) {
+                // sukses: buka akses
+                logStatus('Wajah terdeteksi: ' + best.label + ' (distance ' + best.distance.toFixed(3) + '). Akses diberikan.');
+                sessionStorage.setItem(ACCESS_KEY, 'true'); // tetap login sampai logout
+                unlockPage();
+                stopCamera();
+                return;
+              } else {
+                logStatus('Wajah tidak dikenali (' + best.toString() + '). Silakan coba lagi.', false);
+              }
+            }
+          } else {
+            logStatus('Menunggu deteksi wajah... Pastikan pencahayaan cukup dan wajah menghadap kamera.');
+          }
+        }
+        // tunggu sejenak
+        await new Promise(r => setTimeout(r, interval));
+      }
+    }
+
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+      }
+      video.style.display = 'none';
+      startBtn.style.display = 'inline-block';
+      stopBtn.style.display = 'none';
+    }
+
+    function unlockPage() {
+      overlay.style.display = 'none';
+      mainContent.classList.remove('locked');
+      logoutBtn.style.display = 'block';
+      statusEl && (statusEl.textContent = '');
+    }
+
+    function lockPage() {
+      overlay.style.display = 'flex';
+      mainContent.classList.add('locked');
+      logoutBtn.style.display = 'none';
+    }
+
+    // logout handler
+    logoutBtn.addEventListener('click', () => {
+      const ok = confirm('Yakin ingin logout?');
+      if (!ok) return;
+      sessionStorage.removeItem(ACCESS_KEY);
+      lockPage();
+    });
+
+    // Refresh / rebuild database (manual trigger)
+    refreshDbBtn.addEventListener('click', async () => {
+      logStatus('Muat ulang daftar wajah...');
+      await buildFaceMatcher();
+    });
+
+    // clear stored descriptors cached in memory (for debug)
+    clearRefBtn.addEventListener('click', () => {
+      faceMatcher = null;
+      logStatus('Data referensi dihapus dari memori. Tekan "Muat Ulang Daftar Wajah" untuk membangunnya lagi.');
+    });
+
+    // start button
+    startBtn.addEventListener('click', async () => {
+      logStatus('Mulai verifikasi wajah — memuat model jika perlu ...');
+      if (!isModelsLoaded) {
+        await loadModels();
+      }
+      await startVerification();
+    });
+
+    // on load: if previously granted, unlock
+    window.addEventListener('load', async () => {
+      // if previously granted, keep unlocked until logout
+      if (sessionStorage.getItem(ACCESS_KEY) === 'true') {
+        unlockPage();
+        return;
+      }
+      // load models in background for faster UX
+      await loadModels();
+      // don't build labeled DB automatically here to save time; user can click "Mulai Verifikasi" or "Muat Ulang Daftar Wajah".
+      lockPage();
+    });
+
+    // WhatsApp send function preserved
+    function sendToWhatsApp() {
+      const nama = document.getElementById("nama").value.trim();
+      const pesan = document.getElementById("pesan").value.trim();
+      const nomor = "6285715232441"; // format internasional tanpa 0
+
+      if (nama === "" || pesan === "") {
+        alert("Harap isi nama dan pertanyaan terlebih dahulu.");
+        return false;
+      }
+
+      const template = `Assalamualaikum wr.wb%0APerkenalkan saya ${encodeURIComponent(nama)},%0AIngin mengajukan pertanyaan berikut:%0A${encodeURIComponent(pesan)}`;
+      const url = `https://wa.me/${nomor}?text=${template}`;
+      window.open(url, "_blank");
+      return false;
+    }
+
+    // accessibility: pressing Enter not required
+    // cleanup camera on page unload
+    window.addEventListener('beforeunload', () => stopCamera());
+  </script>
+</body>
+</html>
