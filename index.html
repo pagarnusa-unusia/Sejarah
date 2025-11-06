@@ -51,104 +51,11 @@
 
   <main id="main" class="locked">
     <article>
-      <h2>Sejarah</h2>
-      <p>Pencak Silat Nahdlatul Ulama Pagar Nusa adalah organisasi bela diri di bawah NU.</p>
-      <img src="salampn.jpg" alt="Salam Pagar Nusa" class="center">
-      <h2>Hierarki Organisasi</h2>
-      <ol>
-        <li>Pimpinan Pusat (PP)</li><li>Pimpinan Wilayah (PW)</li><li>Pimpinan Cabang (PC)</li>
-        <li>Pimpinan Anak Cabang (PAC)</li><li>Pimpinan Rayon</li><li>Pimpinan Ranting</li>
-      </ol>
+      <h2>Mohon Maaf</h2>
+      <p>Server ini ditutup sementara.</p>
     </article>
   </main>
 
   <footer>&copy; 2025 PAGARNUSA UNUSIA. All rights reserved.</footer>
-
-  <script>
-    const video=document.getElementById('video');
-    const canvas=document.getElementById('canvas');
-    const startBtn=document.getElementById('startBtn');
-    const snapBtn=document.getElementById('snapBtn');
-    const stopBtn=document.getElementById('stopBtn');
-    const overlay=document.getElementById('overlay');
-    const main=document.getElementById('main');
-    const statusEl=document.getElementById('status');
-    const ACCESS_KEY='pagar_eyed_access';
-    const LABEL_FOLDER='./daftar wajah';
-    const labels=['wajah1','wajah2','wajah3','wajah4','wajah5'];
-    let stream=null,dbCache={};
-
-    function log(msg,ok=true){statusEl.textContent=msg;statusEl.style.color=ok?'#2e7d32':'#c62828';}
-    async function startCam(){
-      try{
-        stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
-        video.srcObject=stream;video.style.display='block';
-        startBtn.style.display='none';snapBtn.style.display='inline-block';stopBtn.style.display='inline-block';
-        log('Kamera aktif, tekan "Ambil Foto & Verifikasi"');
-      }catch(e){log('Tidak bisa membuka kamera',false);}
-    }
-    function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());}video.style.display='none';startBtn.style.display='inline-block';snapBtn.style.display='none';stopBtn.style.display='none';log('Kamera dihentikan');}
-
-    async function captureDataURL(){
-      const ctx=canvas.getContext('2d');
-      const w=Math.min(video.videoWidth,video.videoHeight);
-      ctx.drawImage(video,(video.videoWidth-w)/2,(video.videoHeight-w)/2,w,w,0,0,320,320);
-      return canvas.toDataURL('image/jpeg',0.9);
-    }
-
-    async function preloadRefs(){
-      dbCache={};
-      for(const n of labels){
-        for(const ext of ['jpg','png']){
-          try{
-            const img=new Image();img.crossOrigin='anonymous';
-            await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src=`${LABEL_FOLDER}/${n}.${ext}?_=${Date.now()}`;});
-            const c=document.createElement('canvas');c.width=64;c.height=64;
-            const x=c.getContext('2d');x.drawImage(img,0,0,64,64);
-            const d=x.getImageData(0,0,64,64).data,g=new Float32Array(4096);
-            for(let i=0,j=0;i<d.length;i+=4,j++)g[j]=0.2126*d[i]+0.7152*d[i+1]+0.0722*d[i+2];
-            dbCache[n]=g;break;
-          }catch{}
-        }
-      }
-      const c=Object.keys(dbCache).length;
-      log(c?`${c} referensi siap. Arahkan wajah Anda.`:'Tidak ada referensi ditemukan.',!!c);
-    }
-
-    async function dataURLtoGray(dataURL){
-      return new Promise(res=>{
-        const i=new Image();i.onload=()=>{
-          const c=document.createElement('canvas');c.width=64;c.height=64;
-          const x=c.getContext('2d');x.drawImage(i,0,0,64,64);
-          const d=x.getImageData(0,0,64,64).data,g=new Float32Array(4096);
-          for(let a=0,b=0;a<d.length;a+=4,b++)g[b]=0.2126*d[a]+0.7152*d[a+1]+0.0722*d[a+2];
-          res(g);
-        };i.src=dataURL;
-      });
-    }
-
-    function diff(a,b){let s=0;for(let i=0;i<a.length;i++)s+=Math.abs(a[i]-b[i]);return s/a.length;}
-
-    async function verify(){
-      const data=await captureDataURL();
-      const g=await dataURLtoGray(data);
-      let best={l:null,s:1e9};
-      for(const [l,v] of Object.entries(dbCache)){const sc=diff(g,v);if(sc<best.s)best={l,s:sc};}
-      if(best.l&&best.s<28){sessionStorage.setItem(ACCESS_KEY,'true');unlock(best.l);stopCam();log('Berhasil login ('+best.l+')');}
-      else log('Wajah tidak dikenali, coba lagi.',false);
-    }
-
-    function unlock(label){overlay.style.display='none';main.classList.remove('locked');console.log('Unlocked:',label);}
-    function lock(){overlay.style.display='flex';main.classList.add('locked');}
-
-    startBtn.onclick=startCam;
-    stopBtn.onclick=stopCam;
-    snapBtn.onclick=verify;
-    window.addEventListener('load',async()=>{
-      if(sessionStorage.getItem(ACCESS_KEY)==='true'){unlock('session');return;}
-      lock();await preloadRefs();
-    });
-    window.addEventListener('beforeunload',stopCam);
-  </script>
 </body>
 </html>
