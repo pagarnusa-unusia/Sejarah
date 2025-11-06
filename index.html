@@ -211,6 +211,7 @@
    - Kamera depan HP/laptop otomatis aktif
    - <body> tetap utuh, tidak diubah
    ===================================================== */
+console.log('video ready', video);
 
 const video = document.getElementById('video');
 const startBtn = document.getElementById('startBtn');
@@ -326,7 +327,7 @@ async function verifyFace() {
     const sc = diffScore(gray, data);
     if (sc < best.score) best = { name, score: sc };
   }
-  if (best.name && best.score < 28) {
+  if (best.name && best.score < 40) {
     unlock(best.name);
     logStatus('Verifikasi berhasil (' + best.name + ').');
   } else {
